@@ -1,0 +1,4 @@
+server/.env
+server/.flaskenv
+server/config.py
+server/voices.txt
