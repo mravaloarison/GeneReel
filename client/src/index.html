@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Get started with Add-on development using JavaScript" />
+    <meta name="keywords" content="Adobe, Express, Add-On, JavaScript" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GeneReel</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        sp-theme {
+            transition: opacity 300ms ease-in-out;
+            opacity: 0;
+
+            margin: 0 var(--spectrum-global-dimension-size-200);
+        }
+
+        .vertical-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spectrum-global-dimension-size-100);
+            margin: var(--spectrum-global-dimension-size-100) 0;
+            width: 100%;
+        }
+
+        .vertical-form sp-textfield {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <sp-theme scale="medium" color="light" theme="express">
+        <sp-tabs selected="generate">
+            <sp-tab value="generate">Generate</sp-tab>
+            <sp-tab-panel value="generate">
+                <div class="vertical-form">
+                    <p class="spectrum-Body spectrum-Body--sizeS">Rapidly generate template for your Reels/Shorts by
+                        writing a prompt and then click "Generate".</p>
+                    <sp-field-label required for="txtPrompt">Prompt:</sp-field-label>
+                    <sp-textfield id="user-prompt" multiline placeholder="Write your prompt"></sp-textfield>
+                    <sp-button id="generate-btn" disabled>Generate</sp-button>
+                </div>
+            </sp-tab-panel>
+    </sp-theme>
+</body>
+
+</html>
