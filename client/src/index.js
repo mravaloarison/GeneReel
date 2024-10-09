@@ -20,6 +20,8 @@ import "@spectrum-web-components/tabs/sp-tab-panel.js";
 import AddOnSdk from "https://new.express.adobe.com/static/add-on-sdk/sdk.js";
 import addOnUISdk from "https://new.express.adobe.com/static/add-on-sdk/sdk.js";
 
+import { GIPHY_API_KEY } from "./config.js";
+
 addOnUISdk.ready.then(async () => {
 	console.log("addOnUISdk is ready for use.");
 });
@@ -36,8 +38,6 @@ AddOnSdk.ready.then(async () => {
 		applyTheme(data.theme);
 	});
 
-	console.log("AddOnSdk is ready for use.");
-
 	const userPrompt = document.getElementById("user-prompt");
 	const generateBtn = document.getElementById("generate-btn");
 	let userPromptValue = "";
@@ -50,11 +50,85 @@ AddOnSdk.ready.then(async () => {
 		}
 	});
 
-	generateBtn.addEventListener("click", () => {
+	generateBtn.addEventListener("click", async () => {
 		startLoading(generateBtn);
-		runTask(userPromptValue, stopLoading);
+
+		const data = await getTranscript(userPromptValue, stopLoading);
+		generateGifs(data[0]);
+		/* 
+            TODO
+                - Add the transcript to the UI
+                - Generate Voiceover for the transcript
+                - Generate Images from keywords
+                - Generate Gifs from keywords
+        */
 	});
+
+	AddOnSdk.app.on("dragstart", startDrag);
+	AddOnSdk.app.on("dragend", endDrag);
 });
+
+/* */
+async function getTranscript(userPrompt, callback) {
+	const response = await fetch("http://127.0.0.1:5000/generate_transcript", {
+		method: "POST",
+		body: JSON.stringify({ prompt: userPrompt }),
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+		},
+	});
+
+	const data = await response.json();
+	callback(document.getElementById("generate-btn"));
+
+	return await data.response;
+}
+/* */
+
+/* */
+function generateGifs(keywords) {
+	keywords.forEach(async (keyword) => {
+		let formattedSearchQuery = keyword.replace(" ", "+");
+		let url =
+			`https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=` +
+			formattedSearchQuery;
+		let gifUrl = "";
+
+		try {
+			const response = await fetch(url);
+			const data = await response.json();
+			gifUrl = data.data[0].images.original.url;
+
+			// display the gif
+			displayGif(gifUrl, keyword);
+		} catch (error) {
+			console.error("Error fetching Giphy data:", error);
+		}
+	});
+}
+
+function displayGif(url, keyword) {
+	const grid = document.getElementById("gifs-grid");
+	const card = document.createElement("sp-card");
+	const img = document.createElement("img");
+	img.width = 135;
+	img.src = url;
+	img.alt = keyword;
+	img.addEventListener("click", addImageToDocument);
+
+	AddOnSdk.app.enableDragToDocument(img, {
+		previewCallback: (element) => {
+			return new URL(element.src);
+		},
+		completionCallback: async (element) => {
+			return [{ blob: await getBlob(element.src) }];
+		},
+	});
+
+	card.appendChild(img);
+	grid.appendChild(card);
+}
+/* */
 
 /* --- Loading animation start --- */
 let intervalId;
@@ -77,17 +151,26 @@ function stopLoading(triger) {
 }
 /* --- Loading animation end --- */
 
-async function runTask(userPrompt, callback) {
-	const response = await fetch("http://127.0.0.1:5000/generate_transcript", {
-		method: "POST",
-		body: JSON.stringify({ prompt: userPrompt }),
-		headers: {
-			"Content-type": "application/json; charset=UTF-8",
-		},
-	});
-
-	const data = await response.json();
-	console.log(data);
-
-	callback(document.getElementById("generate-btn"));
+/* */
+async function getBlob(url) {
+	return await fetch(url).then((response) => response.blob());
 }
+
+async function addImageToDocument(event) {
+	const url = event.currentTarget.src;
+	const blob = await getBlob(url);
+	AddOnSdk.app.document.addImage(blob);
+}
+
+function startDrag(eventData) {
+	console.log("The drag event has started for", eventData.element.id);
+}
+
+function endDrag(eventData) {
+	if (!eventData.dropCancelled) {
+		console.log("The drag event has ended for", eventData.element.id);
+	} else {
+		console.log("The drag event was cancelled for", eventData.element.id);
+	}
+}
+/* */

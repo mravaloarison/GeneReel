@@ -23,7 +23,8 @@
         "@spectrum-web-components/field-label": "^0.10.4",
         "@spectrum-web-components/tabs": "^0.10.5",
         "@spectrum-web-components/textfield": "^0.13.9",
-        "@spectrum-web-components/theme": "^0.14.9"
+        "@spectrum-web-components/theme": "^0.14.9",
+        "dotenv": "^16.4.5"
     },
     "devDependencies": {
         "@adobe/ccweb-add-on-scripts": "^2.0.0",

@@ -48,15 +48,28 @@
         <sp-tabs selected="giphy">
             <sp-tab value="giphy">GIFs</sp-tab>
             <sp-tab value="images">Images</sp-tab>
-            <sp-tab value="audio">Voiceover</sp-tab>
+            <sp-tab value="voiceover">Voiceover</sp-tab>
             <sp-tab value="transcript">Transcript</sp-tab>
             <sp-tab-panel value="giphy">
-                <sp-card heading="Card Heading" subheading="JPG Photo">
-                    <img slot="cover-photo" src="https://picsum.photos/200/300" alt="Demo Image" />
-                </sp-card>
+                <sp-grid id="gifs-grid" style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    margin: var(--spectrum-global-dimension-size-200) 0;
+                    gap: var(--spectrum-global-dimension-size-200);
+                "></sp-grid>
+            </sp-tab-panel>
+            <sp-tab-panel value="images">
+                images
+            </sp-tab-panel>
+            <sp-tab-panel value="voiceover">
+                voiceover
+            </sp-tab-panel>
+            <sp-tab-panel value="transcript">
+                transcript
             </sp-tab-panel>
         </sp-tabs>
     </sp-theme>
+    <script src="config.js"></script>
 </body>
 
 </html>
