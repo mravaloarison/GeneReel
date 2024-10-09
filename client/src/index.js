@@ -35,12 +35,30 @@ AddOnSdk.ready.then(async () => {
 
 	const userPrompt = document.getElementById("user-prompt");
 	const generateBtn = document.getElementById("generate-btn");
+	let userPromptValue = "";
 
-	if (userPrompt.value.length > 3) {
-		generateBtn.removeAttribute("disabled");
-	}
+	userPrompt.addEventListener("input", (event) => {
+		userPromptValue = event.target.value;
 
-	generateBtn.addEventListener("click", (event) => {
-		console.log(userPrompt.value);
+		if (userPromptValue.length > 5) {
+			generateBtn.removeAttribute("disabled");
+		}
+	});
+
+	generateBtn.addEventListener("click", () => {
+		startLoading(generateBtn);
+		runTask(userPromptValue);
 	});
 });
+
+function startLoading(triger) {
+	triger.setAttribute("disabled", "true");
+
+	let dots = 0;
+	setInterval(() => {
+		dots = (dots + 1) % 4;
+		triger.textContent = `Generating${" .".repeat(dots)}`;
+	}, 500);
+}
+
+async function runTask(prompt) {}
