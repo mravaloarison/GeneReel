@@ -40,7 +40,7 @@ def text_to_speech_file(text: str) -> str:
         ),
     )
 
-    save_file_path = "static/audio.mp3"
+    save_file_path = "static/voiceover.mp3"
 
     with open(save_file_path, "wb") as f:
         for chunk in response:
