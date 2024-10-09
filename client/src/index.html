@@ -31,6 +31,27 @@
         .vertical-form sp-textfield {
             width: 100%;
         }
+
+        .loader {
+            border: 6px solid #f3f3f3;
+            /* Light grey */
+            border-top: 6px solid #797b7c;
+            /* Blue */
+            border-radius: 50%;
+            width: 21px;
+            height: 21px;
+            animation: spin 1.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
@@ -59,7 +80,12 @@
                 "></sp-grid>
             </sp-tab-panel>
             <sp-tab-panel value="images">
-                images
+                <sp-grid id="images-grid" style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    margin: var(--spectrum-global-dimension-size-200) 0;
+                    gap: var(--spectrum-global-dimension-size-200);
+                "></sp-grid>
             </sp-tab-panel>
             <sp-tab-panel value="voiceover">
                 voiceover

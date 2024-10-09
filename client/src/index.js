@@ -56,11 +56,13 @@ AddOnSdk.ready.then(async () => {
 		const data = await getTranscript(userPromptValue, stopLoading);
 		// generateGifs(data[0]);
 		// addTranscriptToUI(data[2]);
+		generateImages(data[0]);
+		// generateVoiceOver(data[1]);
 		/* 
             TODO
                 - Add the transcript to the UI ✅
                 - Generate Voiceover for the transcript
-                - Generate Images from keywords
+                - Generate Images from keywords ✅
                 - Generate Gifs from keywords ✅
         */
 	});
@@ -108,14 +110,13 @@ function addTranscriptToUI(arrayOfTranscript) {
 
 /* */
 function generateGifs(keywords) {
+	const grid = document.getElementById("gifs-grid");
+	const card = document.createElement("sp-card");
+	loadingCard(card);
+
+	grid.appendChild(card);
+
 	keywords.forEach(async (keyword) => {
-		const grid = document.getElementById("gifs-grid");
-		const card = document.createElement("sp-card");
-		card.id = "loading-card";
-		loadingCard(card);
-
-		grid.appendChild(card);
-
 		let formattedSearchQuery = keyword.replace(" ", "+");
 		let url =
 			`https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=` +
@@ -123,21 +124,57 @@ function generateGifs(keywords) {
 		let gifUrl = "";
 
 		try {
-			grid.removeChild(card);
 			const response = await fetch(url);
 			const data = await response.json();
 			gifUrl = data.data[0].images.original.url;
 
 			// display the gif
-			displayGif(gifUrl, keyword);
+			displayImg(gifUrl, keyword, "gifs-grid");
 		} catch (error) {
 			console.error("Error fetching Giphy data:", error);
+		} finally {
+			grid.removeChild(card);
 		}
 	});
 }
+/* */
 
-function displayGif(url, keyword) {
-	const grid = document.getElementById("gifs-grid");
+/* */
+function generateImages(keywords) {
+	const grid = document.getElementById("images-grid");
+	grid.innerHTML = "";
+
+	const card = document.createElement("sp-card");
+	grid.appendChild(card);
+
+	loadingCard(card);
+
+	keywords.forEach(async (keyword) => {
+		let url = `http://127.0.0.1:5000/generate_image?q=${keyword}`;
+
+		try {
+			const response = await fetch(url);
+			const data = await response.json();
+
+			// console.log(data);
+			if (data.error) return;
+
+			const imageUrl = "http://127.0.0.1:5000/serve/" + data.id + ".png";
+
+			// display the image
+			displayImg(imageUrl, keyword, "images-grid");
+		} catch (error) {
+			console.error("Error fetching Unsplash data:", error);
+		} finally {
+			grid.removeChild(card);
+		}
+	});
+}
+/* */
+
+/* */
+function displayImg(url, keyword, elementID) {
+	const grid = document.getElementById(elementID);
 	const card = document.createElement("sp-card");
 	const img = document.createElement("img");
 	img.width = 135;
@@ -181,19 +218,9 @@ function stopLoading(triger) {
 }
 
 function loadingCard(motherElement) {
-	const div = document.createElement("div");
-	div.style.width = "100%";
-	div.style.height = "100%";
-	div.style.display = "flex";
-	div.style.flexDirection = "column";
-	div.style.alignItems = "center";
-	div.style.justifyContent = "space-around";
-
-	const progressBar = document.createElement("sp-progress-bar");
-	progressBar.setAttribute("indeterminate", "");
-	div.appendChild(progressBar);
-
-	motherElement.appendChild(div);
+	const progressBar = document.createElement("div");
+	progressBar.classList.add("loader");
+	motherElement.appendChild(progressBar);
 }
 /* --- Loading animation end --- */
 
