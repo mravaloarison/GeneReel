@@ -56,8 +56,9 @@ AddOnSdk.ready.then(async () => {
 		const data = await getTranscript(userPromptValue, stopLoading);
 		// generateGifs(data[0]);
 		// addTranscriptToUI(data[2]);
-		generateImages(data[0]);
+		// generateImages(data[0]);
 		// generateVoiceOver(data[1]);
+		displayAudioFile();
 		/* 
             TODO
                 - Add the transcript to the UI ✅
@@ -173,6 +174,28 @@ function generateImages(keywords) {
 /* */
 
 /* */
+function generateVoiceOver(transcript) {
+	const url = "http://127.0.0.1:5000/create_voiceover";
+
+	fetch(url, {
+		method: "POST",
+		body: JSON.stringify({ transcript: transcript }),
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+		},
+	})
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.error) return;
+			displayAudioFile();
+		})
+		.catch((error) => {
+			console.error("Error fetching data:", error);
+		});
+}
+/* */
+
+/* */
 function displayImg(url, keyword, elementID) {
 	const grid = document.getElementById(elementID);
 	const card = document.createElement("sp-card");
@@ -193,6 +216,18 @@ function displayImg(url, keyword, elementID) {
 
 	card.appendChild(img);
 
+	grid.appendChild(card);
+}
+
+function displayAudioFile() {
+	const grid = document.getElementById("voiceover-grid");
+	const card = document.createElement("sp-card");
+	const audio = document.createElement("audio");
+	audio.style.margin = "5px 5px 10px 5px";
+	audio.controls = true;
+	audio.src = "http://127.0.0.1:5000/serve/voiceover.mp3";
+
+	card.appendChild(audio);
 	grid.appendChild(card);
 }
 /* */

@@ -102,7 +102,17 @@ def generate_transcript():
 
 @app.route("/generate_image")
 def generate_image():
-    # get q
+    """
+    Generate an image from a given prompt.
+
+    Expected query parameter:
+    q: str
+
+    Returns:
+    {
+        "id": int
+    }
+    """
     q = request.args.get("q")
 
     client = Cloudflare(api_token=os.getenv("CLOUDFLARE_API_TOKEN"))
