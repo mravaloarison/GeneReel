@@ -54,18 +54,10 @@ AddOnSdk.ready.then(async () => {
 		startLoading(generateBtn);
 
 		const data = await getTranscript(userPromptValue, stopLoading);
-		// generateGifs(data[0]);
-		// addTranscriptToUI(data[2]);
-		// generateImages(data[0]);
-		// generateVoiceOver(data[1]);
-		displayAudioFile();
-		/* 
-            TODO
-                - Add the transcript to the UI ✅
-                - Generate Voiceover for the transcript
-                - Generate Images from keywords ✅
-                - Generate Gifs from keywords ✅
-        */
+		generateVoiceOver(data[1]);
+		addTranscriptToUI(data[2]);
+		generateGifs(data[0]);
+		generateImages(data[0]);
 	});
 
 	AddOnSdk.app.on("dragstart", startDrag);
