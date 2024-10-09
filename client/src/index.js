@@ -54,13 +54,14 @@ AddOnSdk.ready.then(async () => {
 		startLoading(generateBtn);
 
 		const data = await getTranscript(userPromptValue, stopLoading);
-		generateGifs(data[0]);
+		// generateGifs(data[0]);
+		// addTranscriptToUI(data[2]);
 		/* 
             TODO
-                - Add the transcript to the UI
+                - Add the transcript to the UI ✅
                 - Generate Voiceover for the transcript
                 - Generate Images from keywords
-                - Generate Gifs from keywords
+                - Generate Gifs from keywords ✅
         */
 	});
 
@@ -86,8 +87,35 @@ async function getTranscript(userPrompt, callback) {
 /* */
 
 /* */
+function addTranscriptToUI(arrayOfTranscript) {
+	arrayOfTranscript.forEach((sentence) => {
+		const transcriptContainer = document.getElementById(
+			"transcript-container"
+		);
+
+		const divider = document.createElement("sp-divider");
+		transcriptContainer.appendChild(divider);
+
+		const div = document.createElement("div");
+
+		div.style = "--spectrum-card-body-header-height: auto;";
+		div.textContent = sentence;
+
+		transcriptContainer.appendChild(div);
+	});
+}
+/* */
+
+/* */
 function generateGifs(keywords) {
 	keywords.forEach(async (keyword) => {
+		const grid = document.getElementById("gifs-grid");
+		const card = document.createElement("sp-card");
+		card.id = "loading-card";
+		loadingCard(card);
+
+		grid.appendChild(card);
+
 		let formattedSearchQuery = keyword.replace(" ", "+");
 		let url =
 			`https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=` +
@@ -95,6 +123,7 @@ function generateGifs(keywords) {
 		let gifUrl = "";
 
 		try {
+			grid.removeChild(card);
 			const response = await fetch(url);
 			const data = await response.json();
 			gifUrl = data.data[0].images.original.url;
@@ -126,6 +155,7 @@ function displayGif(url, keyword) {
 	});
 
 	card.appendChild(img);
+
 	grid.appendChild(card);
 }
 /* */
@@ -148,6 +178,22 @@ function stopLoading(triger) {
 	triger.removeAttribute("disabled");
 
 	clearInterval(intervalId);
+}
+
+function loadingCard(motherElement) {
+	const div = document.createElement("div");
+	div.style.width = "100%";
+	div.style.height = "100%";
+	div.style.display = "flex";
+	div.style.flexDirection = "column";
+	div.style.alignItems = "center";
+	div.style.justifyContent = "space-around";
+
+	const progressBar = document.createElement("sp-progress-bar");
+	progressBar.setAttribute("indeterminate", "");
+	div.appendChild(progressBar);
+
+	motherElement.appendChild(div);
 }
 /* --- Loading animation end --- */
 
