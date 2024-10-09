@@ -66,7 +66,7 @@ def generate_transcript():
 
     Returns:
     {
-        "response": [keywords, transcript]
+        "response": [array, str, array]
     }
     """
     if request.method == "GET":

@@ -18,6 +18,11 @@ import "@spectrum-web-components/tabs/sp-tab.js";
 import "@spectrum-web-components/tabs/sp-tab-panel.js";
 
 import AddOnSdk from "https://new.express.adobe.com/static/add-on-sdk/sdk.js";
+import addOnUISdk from "https://new.express.adobe.com/static/add-on-sdk/sdk.js";
+
+addOnUISdk.ready.then(async () => {
+	console.log("addOnUISdk is ready for use.");
+});
 
 function applyTheme(theme = "light") {
 	document.querySelector("sp-theme").setAttribute("color", theme);
@@ -47,18 +52,42 @@ AddOnSdk.ready.then(async () => {
 
 	generateBtn.addEventListener("click", () => {
 		startLoading(generateBtn);
-		runTask(userPromptValue);
+		runTask(userPromptValue, stopLoading);
 	});
 });
+
+/* --- Loading animation start --- */
+let intervalId;
 
 function startLoading(triger) {
 	triger.setAttribute("disabled", "true");
 
 	let dots = 0;
-	setInterval(() => {
+	intervalId = setInterval(() => {
 		dots = (dots + 1) % 4;
 		triger.textContent = `Generating${" .".repeat(dots)}`;
 	}, 500);
 }
 
-async function runTask(prompt) {}
+function stopLoading(triger) {
+	triger.textContent = "Generate";
+	triger.removeAttribute("disabled");
+
+	clearInterval(intervalId);
+}
+/* --- Loading animation end --- */
+
+async function runTask(userPrompt, callback) {
+	const response = await fetch("http://127.0.0.1:5000/generate_transcript", {
+		method: "POST",
+		body: JSON.stringify({ prompt: userPrompt }),
+		headers: {
+			"Content-type": "application/json; charset=UTF-8",
+		},
+	});
+
+	const data = await response.json();
+	console.log(data);
+
+	callback(document.getElementById("generate-btn"));
+}

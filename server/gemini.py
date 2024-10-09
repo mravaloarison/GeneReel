@@ -28,16 +28,18 @@ def get_keywords_for_each_sentence(script):
     Generate a keyword for each sentence in the transcript provided later.
     """
     transcript = ""
+    array_of_transcript = []
 
     for sentence in script:
         transcript += sentence[0] + " "
+        array_of_transcript.append(sentence[0])
 
     prompt = get_keywords_for_each_sentence_prompt + transcript
 
     response = prompt_to_json_model.generate_content(prompt)
-    res = json.loads(response.text)
+    array_of_keywords = json.loads(response.text)
 
-    return [res, transcript]
+    return [array_of_keywords, transcript, array_of_transcript]
 
 def test_call(prompt):
     response = regular_model.generate_content(prompt)

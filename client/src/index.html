@@ -36,17 +36,26 @@
 
 <body>
     <sp-theme scale="medium" color="light" theme="express">
-        <sp-tabs selected="generate">
-            <sp-tab value="generate">Generate</sp-tab>
-            <sp-tab-panel value="generate">
-                <div class="vertical-form">
-                    <p class="spectrum-Body spectrum-Body--sizeS">Rapidly generate template for your Reels/Shorts by
-                        writing a prompt and then click "Generate".</p>
-                    <sp-field-label required for="txtPrompt">Prompt:</sp-field-label>
-                    <sp-textfield id="user-prompt" multiline placeholder="Write your prompt"></sp-textfield>
-                    <sp-button id="generate-btn" disabled>Generate</sp-button>
-                </div>
+
+        <div class="vertical-form">
+            <p class="spectrum-Body spectrum-Body--sizeS">Rapidly generate template for your Reels/Shorts by
+                writing a prompt and then click "Generate".</p>
+            <sp-field-label required for="txtPrompt">Prompt:</sp-field-label>
+            <sp-textfield id="user-prompt" multiline placeholder="Write your prompt"></sp-textfield>
+            <sp-button id="generate-btn" disabled>Generate</sp-button>
+        </div>
+
+        <sp-tabs selected="giphy">
+            <sp-tab value="giphy">GIFs</sp-tab>
+            <sp-tab value="images">Images</sp-tab>
+            <sp-tab value="audio">Voiceover</sp-tab>
+            <sp-tab value="transcript">Transcript</sp-tab>
+            <sp-tab-panel value="giphy">
+                <sp-card heading="Card Heading" subheading="JPG Photo">
+                    <img slot="cover-photo" src="https://picsum.photos/200/300" alt="Demo Image" />
+                </sp-card>
             </sp-tab-panel>
+        </sp-tabs>
     </sp-theme>
 </body>
 
