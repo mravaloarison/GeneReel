@@ -1,13 +1,13 @@
 # GeneReel
 
-- Devpost: [Devpost link](https://devpost.com/software/reel)
-- Github: [Github link](https://github.com/mravaloarison/GeneReel)
-
-🏆 **Winner – most creative Adobe Express Add-on at Yale University**
-
 An Adobe Add On built under 24hrs at `Yale University` during their anual hackathon [#YHack 2024](https://yhack.devpost.com/).
 
 It helps content creator build reels and short videos for social media platforms like `Youtube`, `TikTok`, etc faster.
+
+## Link
+
+- [Devpost link](https://devpost.com/software/reel) 🏆 **Winner – most creative Adobe Express Add-on at Yale University**
+- [Github link](https://github.com/mravaloarison/GeneReel)
 
 ## Server side setup
 
